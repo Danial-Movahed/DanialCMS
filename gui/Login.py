@@ -1,4 +1,3 @@
-from base64 import encode
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -9,17 +8,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from hashlib import blake2s
-from gui import ui_Login
+from . import ui_Login,BlogManager
 
 Base = declarative_base()
 
-LoggedInUser = None
-
-
-def LoggedIn(u):
+def LoggedIn(u, title, dbname):
     global LoggedInUser
     LoggedInUser = u
     print(LoggedInUser.Username)
+    global blogmgrwnd
+    blogmgrwnd = BlogManager.Blog(u,title, dbname)
 
 
 class User(Base):
@@ -28,10 +26,13 @@ class User(Base):
     Password = Column(String(1000), nullable=False)
     isAdmin = Column(Boolean(), nullable=False)
 
+
 class BlogLogin(QMainWindow, ui_Login.Ui_MainWindow):
-    def __init__(self, dbname):
+    def __init__(self, dbname, title):
         super().__init__()
         self.setupUi(self)
+        self.dbname = dbname
+        self.title = title
         self.engine = create_engine('sqlite:///'+dbname)
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
@@ -46,6 +47,7 @@ class BlogLogin(QMainWindow, ui_Login.Ui_MainWindow):
         for user in existing_Users:
             if self.LoginUsername.text() == user.Username and blake2s(self.LoginPassword.text().encode()).hexdigest() == user.Password:
                 self.label_6.setText("Welcome!")
-                LoggedIn(user)
+                LoggedIn(user, self.title, self.dbname)
+                self.close()
                 return
         self.label_6.setText("Wrong username or password!")

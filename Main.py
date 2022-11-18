@@ -124,7 +124,9 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
             self.dlg.exec()
             return
         self.loginWnd = BlogLogin(self.ListBlogs.selectedItems()[
-                                  0].text().split(",")[1].strip())
+                                  0].text().split(",")[1].strip(), self.ListBlogs.selectedItems()[
+                                  0].text().split(",")[0].strip())
+        self.close()
 
 
 if __name__ == '__main__':

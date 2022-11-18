@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 from gui import ui_CreateBlogWizard, ui_BlogPicker
 from os import path
 from hashlib import blake2s
-from Login import *
+from gui.Login import *
 
 Base = declarative_base()
 
@@ -38,7 +38,7 @@ class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
     def __init__(self):
         super(CreateBlogWizard, self).__init__()
         self.setupUi(self)
-        self.show()
+        self.setWindowTitle("DanialCMS blog wizard")
         self.Quitbtn.clicked.connect(lambda: self.close())
         self.Backbtn1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(
             self.stackedWidget.currentIndex()-1))
@@ -51,6 +51,7 @@ class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
         self.Nextbtn3.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(
             self.stackedWidget.currentIndex()+1))
         self.Donebtn.clicked.connect(lambda: self.createBlog())
+        self.show()
 
     def createBlog(self):
         blog = Blogs()
@@ -104,6 +105,7 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
         self.actionQuit.triggered.connect(lambda: self.close())
         self.LoadBlogbtn.clicked.connect(lambda: self.loadblog())
         self.refresh()
+        self.setWindowTitle("DanialCMS")
         self.show()
 
     def startWizard(self):
@@ -118,7 +120,7 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
 
     def loadblog(self):
         if len(self.ListBlogs.selectedItems()) < 1:
-            self.dlg = ErrorDialog("Please select a blog!",self)
+            self.dlg = ErrorDialog("Please select a blog!", self)
             self.dlg.exec()
             return
         self.loginWnd = BlogLogin(self.ListBlogs.selectedItems()[

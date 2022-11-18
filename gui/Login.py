@@ -38,6 +38,7 @@ class BlogLogin(QMainWindow, ui_Login.Ui_MainWindow):
         self.session = self.Session()
         self.LoginContinuebtn.clicked.connect(lambda: self.checkSecrets())
         self.LoginQuitbtn.clicked.connect(lambda: self.close())
+        self.setWindowTitle("DanialCMS login")
         self.show()
 
     def checkSecrets(self):

@@ -79,6 +79,11 @@ Setup wizard helps you to create a new DanialCMS blog!</string>
               <height>50</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(234, 7, 11);
 border-radius: 10px;</string>
@@ -114,6 +119,11 @@ border-radius: 10px;</string>
               <width>16777215</width>
               <height>50</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(5, 163, 55);
@@ -263,6 +273,11 @@ border-radius: 10px;</string>
               <height>50</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(234, 7, 11);
 border-radius: 10px;</string>
@@ -298,6 +313,11 @@ border-radius: 10px;</string>
               <width>16777215</width>
               <height>50</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(5, 163, 55);
@@ -419,6 +439,9 @@ border-radius: 10px;</string>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
               </property>
+              <property name="placeholderText">
+               <string>Username:</string>
+              </property>
              </widget>
             </item>
             <item>
@@ -475,6 +498,9 @@ border-radius: 10px;</string>
               </property>
               <property name="echoMode">
                <enum>QLineEdit::Password</enum>
+              </property>
+              <property name="placeholderText">
+               <string>Password:</string>
               </property>
              </widget>
             </item>
@@ -543,6 +569,11 @@ border-radius: 10px;</string>
               <height>50</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(234, 7, 11);
 border-radius: 10px;</string>
@@ -578,6 +609,11 @@ border-radius: 10px;</string>
               <width>16777215</width>
               <height>50</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(5, 163, 55);
@@ -657,6 +693,11 @@ Enjoy your blog!</string>
               <width>16777215</width>
               <height>50</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(5, 163, 55);

@@ -7,8 +7,7 @@ from sqlalchemy import Column, Boolean, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-import ui_BlogPicker
-import ui_CreateBlogWizard
+from gui import ui_CreateBlogWizard,ui_BlogPicker
 from os import path
 from hashlib import blake2s
 
@@ -17,8 +16,8 @@ Base = declarative_base()
 
 class Blogs(Base):
     __tablename__ = 'Blogs'
-    Title = Column(String(1000), primary_key=True, nullable=False)
-    UserDB = Column(String(1000), nullable=False)
+    Title = Column(String(1000), nullable=False)
+    UserDB = Column(String(1000), primary_key=True, nullable=False)
 
 
 class User(Base):
@@ -28,7 +27,7 @@ class User(Base):
     isAdmin = Column(Boolean(), nullable=False)
 
 
-engine = create_engine('sqlite:///Blogs.db')
+engine = create_engine('sqlite:///Databases/Blogs.db')
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -56,10 +55,10 @@ class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
         blog = Blogs()
         print(self.BlogTitle.text())
         blog.Title = self.BlogTitle.text()
-        dbname = "Users"+blog.Title+".db"
+        dbname = "Databases/Users_"+blog.Title+".db"
         i = 1
         while path.exists(dbname):
-            dbname = "Users"+blog.Title+str(i)+".db"
+            dbname = "Databases/Users_"+blog.Title+str(i)+".db"
             i += 1
         blog.UserDB = dbname
         print(dbname)

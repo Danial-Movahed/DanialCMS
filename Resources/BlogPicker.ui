@@ -229,7 +229,7 @@ padding: 0px 5px;</string>
   </action>
  </widget>
  <resources>
-  <include location="../Resources/bg.qrc"/>
+  <include location="bg.qrc"/>
  </resources>
  <connections/>
 </ui>

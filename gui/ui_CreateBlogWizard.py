@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '../Resources/CreateBlogWizard.ui'
+# Form implementation generated from reading ui file 'Resources/CreateBlogWizard.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -49,6 +49,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.Quitbtn.sizePolicy().hasHeightForWidth())
         self.Quitbtn.setSizePolicy(sizePolicy)
         self.Quitbtn.setMaximumSize(QtCore.QSize(16777215, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.Quitbtn.setFont(font)
         self.Quitbtn.setStyleSheet("background-color: rgb(234, 7, 11);\n"
 "border-radius: 10px;")
         self.Quitbtn.setObjectName("Quitbtn")
@@ -62,6 +65,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.Nextbtn1.sizePolicy().hasHeightForWidth())
         self.Nextbtn1.setSizePolicy(sizePolicy)
         self.Nextbtn1.setMaximumSize(QtCore.QSize(16777215, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.Nextbtn1.setFont(font)
         self.Nextbtn1.setStyleSheet("background-color: rgb(5, 163, 55);\n"
 "border-radius: 10px;")
         self.Nextbtn1.setObjectName("Nextbtn1")
@@ -115,6 +121,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.Backbtn1.sizePolicy().hasHeightForWidth())
         self.Backbtn1.setSizePolicy(sizePolicy)
         self.Backbtn1.setMaximumSize(QtCore.QSize(16777215, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.Backbtn1.setFont(font)
         self.Backbtn1.setStyleSheet("background-color: rgb(234, 7, 11);\n"
 "border-radius: 10px;")
         self.Backbtn1.setObjectName("Backbtn1")
@@ -128,6 +137,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.Nextbtn2.sizePolicy().hasHeightForWidth())
         self.Nextbtn2.setSizePolicy(sizePolicy)
         self.Nextbtn2.setMaximumSize(QtCore.QSize(16777215, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.Nextbtn2.setFont(font)
         self.Nextbtn2.setStyleSheet("background-color: rgb(5, 163, 55);\n"
 "border-radius: 10px;")
         self.Nextbtn2.setObjectName("Nextbtn2")
@@ -209,6 +221,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.Backbtn2.sizePolicy().hasHeightForWidth())
         self.Backbtn2.setSizePolicy(sizePolicy)
         self.Backbtn2.setMaximumSize(QtCore.QSize(16777215, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.Backbtn2.setFont(font)
         self.Backbtn2.setStyleSheet("background-color: rgb(234, 7, 11);\n"
 "border-radius: 10px;")
         self.Backbtn2.setObjectName("Backbtn2")
@@ -222,6 +237,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.Nextbtn3.sizePolicy().hasHeightForWidth())
         self.Nextbtn3.setSizePolicy(sizePolicy)
         self.Nextbtn3.setMaximumSize(QtCore.QSize(16777215, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.Nextbtn3.setFont(font)
         self.Nextbtn3.setStyleSheet("background-color: rgb(5, 163, 55);\n"
 "border-radius: 10px;")
         self.Nextbtn3.setObjectName("Nextbtn3")
@@ -253,6 +271,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.Donebtn.sizePolicy().hasHeightForWidth())
         self.Donebtn.setSizePolicy(sizePolicy)
         self.Donebtn.setMaximumSize(QtCore.QSize(16777215, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.Donebtn.setFont(font)
         self.Donebtn.setStyleSheet("background-color: rgb(5, 163, 55);\n"
 "border-radius: 10px;")
         self.Donebtn.setObjectName("Donebtn")
@@ -292,6 +313,8 @@ class Ui_MainWindow(object):
         self.Backbtn1.setText(_translate("MainWindow", "Back"))
         self.Nextbtn2.setText(_translate("MainWindow", "Next"))
         self.label_3.setText(_translate("MainWindow", "Enter the username and password for the admin user"))
+        self.BlogUsername.setPlaceholderText(_translate("MainWindow", "Username:"))
+        self.BlogPassword.setPlaceholderText(_translate("MainWindow", "Password:"))
         self.Backbtn2.setText(_translate("MainWindow", "Back"))
         self.Nextbtn3.setText(_translate("MainWindow", "Next"))
         self.label_4.setText(_translate("MainWindow", "Finished!\n"

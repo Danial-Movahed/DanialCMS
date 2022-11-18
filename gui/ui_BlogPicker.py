@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '../Resources/BlogPicker.ui'
+# Form implementation generated from reading ui file 'Resources/BlogPicker.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -143,4 +143,4 @@ class Ui_MainWindow(object):
         self.actionMr_Ahmadi_Mode.setText(_translate("MainWindow", "Mr.Ahmadi Mode!"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionMr_Ahmadi_Mode_2.setText(_translate("MainWindow", "Mr.Ahmadi Mode!"))
-import bg_rc
+from . import bg_rc

@@ -3,14 +3,81 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import *
 from PyQt5.QtMultimediaWidgets import *
+from sqlalchemy import Column, Boolean, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 import ui_BlogPicker
 import ui_CreateBlogWizard
+from os import path
+from hashlib import blake2s
+
+Base = declarative_base()
+
+
+class Blogs(Base):
+    __tablename__ = 'Blogs'
+    Title = Column(String(1000), primary_key=True, nullable=False)
+    UserDB = Column(String(1000), nullable=False)
+
+
+class User(Base):
+    __tablename__ = 'UserDB'
+    Username = Column(String(1000), primary_key=True, nullable=False)
+    Password = Column(String(1000), nullable=False)
+    isAdmin = Column(Boolean(), nullable=False)
+
+
+engine = create_engine('sqlite:///Blogs.db')
+Base.metadata.create_all(engine)
+Session = sessionmaker(bind=engine)
+session = Session()
+
 
 class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
     def __init__(self):
         super(CreateBlogWizard, self).__init__()
         self.setupUi(self)
         self.show()
+        self.Quitbtn.clicked.connect(lambda: self.close())
+        self.Backbtn1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(
+            self.stackedWidget.currentIndex()-1))
+        self.Backbtn2.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(
+            self.stackedWidget.currentIndex()-1))
+        self.Nextbtn1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(
+            self.stackedWidget.currentIndex()+1))
+        self.Nextbtn2.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(
+            self.stackedWidget.currentIndex()+1))
+        self.Nextbtn3.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(
+            self.stackedWidget.currentIndex()+1))
+        self.Donebtn.clicked.connect(lambda: self.createBlog())
+
+    def createBlog(self):
+        blog = Blogs()
+        print(self.BlogTitle.text())
+        blog.Title = self.BlogTitle.text()
+        dbname = "Users"+blog.Title+".db"
+        i = 1
+        while path.exists(dbname):
+            dbname = "Users"+blog.Title+str(i)+".db"
+            i += 1
+        blog.UserDB = dbname
+        print(dbname)
+        session.add(blog)
+        session.commit()
+        self.engine = create_engine('sqlite:///'+dbname)
+        Base.metadata.create_all(self.engine)
+        self.Session = sessionmaker(bind=self.engine)
+        self.session = self.Session()
+        user = User()
+        user.Username = self.BlogUsername.text()
+        user.Password = blake2s(self.BlogPassword.text().encode()).hexdigest()
+        user.isAdmin = True
+        self.session.add(user)
+        self.session.commit()
+        self.close()
+
+
 class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
     def __init__(self):
         super(BlogPicker, self).__init__()
@@ -18,11 +85,18 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
         self.show()
         self.NewBlogbtn.clicked.connect(lambda: self.startWizard())
         self.Refreshbtn.clicked.connect(lambda: self.refresh())
+        self.actionQuit.triggered.connect(lambda: self.close())
+        self.refresh()
+
     def startWizard(self):
-       self.wzd = CreateBlogWizard()
-       self.wzd.closeEvent = self.refresh
-    def refresh(self,e=None):
-        print("aa")
+        self.wzd = CreateBlogWizard()
+        self.wzd.closeEvent = self.refresh
+
+    def refresh(self, e=None):
+        existing_Blogs = session.query(Blogs).all()
+        self.ListBlogs.clear()
+        for blog in existing_Blogs:
+            self.ListBlogs.addItem(blog.Title)
 
 
 if __name__ == '__main__':

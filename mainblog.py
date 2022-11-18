@@ -6,13 +6,11 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-
 class User(Base):
     __tablename__ = 'UserDB'
     Username = Column(String(1000), primary_key=True, nullable=False)
     Password = Column(String(1000), nullable=False)
     isAdmin = Column(Boolean(), nullable=False)
-
 
 engine = create_engine('sqlite:///Users.db')
 Base.metadata.create_all(engine)

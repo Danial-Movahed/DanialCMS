@@ -208,7 +208,7 @@ border-radius: 10px;</string>
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit">
+           <widget class="QLineEdit" name="BlogTitle">
             <property name="font">
              <font>
               <pointsize>19</pointsize>
@@ -395,7 +395,7 @@ border-radius: 10px;</string>
              </spacer>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2">
+             <widget class="QLineEdit" name="BlogUsername">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -458,7 +458,7 @@ border-radius: 10px;</string>
              </spacer>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_3">
+             <widget class="QLineEdit" name="BlogPassword">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>

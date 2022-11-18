@@ -80,7 +80,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLineEdit" name="BlogUsername_3">
+         <widget class="QLineEdit" name="LoginUsername">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -146,7 +146,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLineEdit" name="BlogPassword_3">
+         <widget class="QLineEdit" name="LoginPassword">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -218,7 +218,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="Backbtn2_2">
+       <widget class="QPushButton" name="LoginQuitbtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -262,7 +262,7 @@ border-radius: 10px;</string>
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="Nextbtn3_2">
+       <widget class="QPushButton" name="LoginContinuebtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>

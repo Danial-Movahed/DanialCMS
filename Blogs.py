@@ -7,9 +7,10 @@ from sqlalchemy import Column, Boolean, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from gui import ui_CreateBlogWizard,ui_BlogPicker
+from gui import ui_CreateBlogWizard, ui_BlogPicker
 from os import path
 from hashlib import blake2s
+from Login import *
 
 Base = declarative_base()
 
@@ -77,15 +78,33 @@ class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
         self.close()
 
 
+class ErrorDialog(QDialog):
+    def __init__(self, label, parent=None):
+        super().__init__(parent)
+
+        self.setWindowTitle("Error!")
+
+        QBtn = QDialogButtonBox.Ok
+
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(lambda: self.close())
+        self.layout = QVBoxLayout()
+        message = QLabel(label)
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
+
+
 class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
     def __init__(self):
         super(BlogPicker, self).__init__()
         self.setupUi(self)
-        self.show()
         self.NewBlogbtn.clicked.connect(lambda: self.startWizard())
         self.Refreshbtn.clicked.connect(lambda: self.refresh())
         self.actionQuit.triggered.connect(lambda: self.close())
+        self.LoadBlogbtn.clicked.connect(lambda: self.loadblog())
         self.refresh()
+        self.show()
 
     def startWizard(self):
         self.wzd = CreateBlogWizard()
@@ -95,7 +114,15 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
         existing_Blogs = session.query(Blogs).all()
         self.ListBlogs.clear()
         for blog in existing_Blogs:
-            self.ListBlogs.addItem(blog.Title)
+            self.ListBlogs.addItem(blog.Title+", "+blog.UserDB)
+
+    def loadblog(self):
+        if len(self.ListBlogs.selectedItems()) < 1:
+            self.dlg = ErrorDialog("Please select a blog!",self)
+            self.dlg.exec()
+            return
+        self.loginWnd = BlogLogin(self.ListBlogs.selectedItems()[
+                                  0].text().split(",")[1].strip())
 
 
 if __name__ == '__main__':

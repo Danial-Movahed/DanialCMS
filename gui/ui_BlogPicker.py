@@ -51,6 +51,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.ListBlogs.sizePolicy().hasHeightForWidth())
         self.ListBlogs.setSizePolicy(sizePolicy)
         self.ListBlogs.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.ListBlogs.setFont(font)
         self.ListBlogs.setStyleSheet("background-color: #444;\n"
 "border-radius:10px;")
         self.ListBlogs.setObjectName("ListBlogs")

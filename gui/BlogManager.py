@@ -1,5 +1,6 @@
+from ast import Delete
 from hashlib import blake2s
-from sqlalchemy import Column, Boolean, String
+from sqlalchemy import Column, Boolean, String, delete
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -12,21 +13,26 @@ from . import EditCreate, ui_BlogManager, ShowPost
 Base = declarative_base()
 
 
-class ErrorDialog(QDialog):
-    def __init__(self, label, parent=None):
+class CDialog(QDialog):
+    def __init__(self, label, Title, mode, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle("Error!")
-
-        QBtn = QDialogButtonBox.Ok
+        self.setWindowTitle(Title)
+        if mode:
+            QBtn = QDialogButtonBox.Ok
+        else:
+            QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
 
         self.buttonBox = QDialogButtonBox(QBtn)
-        self.buttonBox.accepted.connect(lambda: self.close())
+        self.buttonBox.accepted.connect(self.accept)
+        if not mode:
+            self.buttonBox.rejected.connect(self.reject)
         self.layout = QVBoxLayout()
         message = QLabel(label)
         self.layout.addWidget(message)
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
+
 
 class User(Base):
     __tablename__ = 'UserDB'
@@ -37,7 +43,7 @@ class User(Base):
 
 class Post(Base):
     __tablename__ = 'PostDB'
-    Title = Column(String(1000), primary_key=True, nullable=False)
+    Title = Column(String(), primary_key=True, nullable=False)
     Message = Column(String(), nullable=False)
 
 
@@ -53,7 +59,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         self.NewPost.clicked.connect(lambda: self.addPost())
         self.ViewPost.clicked.connect(lambda: self.viewPost())
         # self.EditPost.clicked.connect(lambda: self.editPost())
-        # self.DeletePost.clicked.connect(lambda: self.deletePost())
+        self.DeletePost.clicked.connect(lambda: self.deletePost())
         self.show()
         self.engine = create_engine('sqlite:///'+self.dbname)
         Base.metadata.create_all(self.engine)
@@ -85,7 +91,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
 
     def viewPost(self):
         if len(self.PostList.selectedItems()) < 1:
-            self.dlg = ErrorDialog("Please select a post!", self)
+            self.dlg = CDialog("Please select a post!", "Error!", True, self)
             self.dlg.exec()
             return
         for post in self.posts:
@@ -93,7 +99,17 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
                 self.editCreateWnd = ShowPost.ShowPost(
                     post.Title, post.Message)
                 return
+    def deletePost(self):
+        self.dlg = CDialog("Are you sure you want to delete this post?", "Question!", False, self)
+        if self.dlg.exec():
+            print(self.PostList.selectedItems()[0].text())
+            self.session.delete(self.session).where(self.session.Post.Title=="test2")
+            self.session.commit()
+            self.refreshPosts()
+        else:
+            print("Cancel!")
 
+        return
     def refreshPosts(self):
         existing_posts = self.sessionP.query(Post).all()
         self.PostList.clear()

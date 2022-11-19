@@ -1,5 +1,5 @@
 from .main import *
-from . import ui_BlogMgmt
+from . import ui_BlogMgmt,NewUser
 
 
 class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
@@ -8,25 +8,26 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("DanialCMS blog management")
         self.session = session
-        self.Users = []
+        self.UsersList = []
         self.adminCount = 0
         self.refreshUsers()
         self.BlogMgmtDeleteUser.clicked.connect(lambda: self.deleteUser())
+        self.BlogMgmtAddUser.clicked.connect(lambda: self.addUser())
         self.show()
 
     def refreshUsers(self):
         existing_users = self.session.query(User).all()
-        self.Users = []
+        self.UsersList = []
         self.adminCount = 0
         self.BlogMgmtUsersList.clear()
         for user in existing_users:
-            self.Users.append(user)
+            self.UsersList.append(user)
             self.BlogMgmtUsersList.addItem(user.Username)
             if user.isAdmin:
                 self.adminCount += 1
 
     def findUserByUsername(self, username):
-        for user in self.Users:
+        for user in self.UsersList:
             if user.Username == username:
                 return user
         return None
@@ -49,3 +50,22 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
             self.session.commit()
             self.refreshUsers()
         return
+    
+    def addUser(self):
+        self.newUserWnd = NewUser.NewUser()
+        self.newUserWnd.closeEvent = self.saveUser
+
+    def saveUser(self,e):
+        if self.newUserWnd.status:
+            for user in self.UsersList:
+                if user.Username == self.newUserWnd.NewUserUsername.text():
+                    self.dlg = CDialog("This username already exists!", "Error!", True, self)
+                    self.dlg.exec()
+                    return
+            user = User()
+            user.Username = self.newUserWnd.NewUserUsername.text()
+            user.Password = blake2s(self.newUserWnd.NewUserPassword.text().encode()).hexdigest()
+            user.isAdmin = self.newUserWnd.NewUserIsAdmin.isChecked()
+            self.session.add(user)
+            self.session.commit()
+            self.refreshUsers()

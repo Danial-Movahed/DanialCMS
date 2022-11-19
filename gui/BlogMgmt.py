@@ -3,7 +3,7 @@ from . import ui_BlogMgmt, NewUser
 
 
 class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
-    def __init__(self, session, postDBName, usersDBName):
+    def __init__(self, session, postDBName, usersDBName, loggedInUser):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("DanialCMS blog management")
@@ -12,6 +12,7 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
         self.adminCount = 0
         self.postDBName = postDBName
         self.usersDBName = usersDBName
+        self.loggedInUser = loggedInUser
         self.refreshUsers()
         self.BlogMgmtDeleteUser.clicked.connect(lambda: self.deleteUser())
         self.BlogMgmtAddUser.clicked.connect(lambda: self.addUser())
@@ -41,6 +42,11 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
             self.dlg.exec()
             return
         username = self.BlogMgmtUsersList.selectedItems()[0].text()
+        if username == self.loggedInUser.Username:
+            self.dlg = CDialog(
+                "This user is currently logged in!", "Error!", True, self)
+            self.dlg.exec()
+            return
         user = self.findUserByUsername(username)
         self.dlg = CDialog(
             "Are you sure you want to delete this user?", "Question!", False, self)

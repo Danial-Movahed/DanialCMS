@@ -100,7 +100,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.refreshPosts()
 
     def blogMgmt(self):
-        self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session,"Databases/Posts_"+(self.dbname.split("/")[1].split("_")[1]),self.dbname)
+        self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session,"Databases/Posts_"+(self.dbname.split("/")[1].split("_")[1]),self.dbname,self.loggedInUser)
 
     def refreshPosts(self):
         existing_posts = self.sessionP.query(Post).all()

@@ -8,10 +8,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import *
 from PyQt5.QtMultimediaWidgets import *
-from os import path
+from os import path, remove
 
 
 Base = declarative_base()
+
 
 class CDialog(QDialog):
     def __init__(self, label, Title, mode, parent=None):
@@ -33,13 +34,21 @@ class CDialog(QDialog):
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 
+
 class Post(Base):
     __tablename__ = 'PostDB'
     Title = Column(String(), primary_key=True, nullable=False)
     Message = Column(String(), nullable=False)
+
 
 class User(Base):
     __tablename__ = 'UserDB'
     Username = Column(String(1000), primary_key=True, nullable=False)
     Password = Column(String(1000), nullable=False)
     isAdmin = Column(Boolean(), nullable=False)
+
+
+class Blogs(Base):
+    __tablename__ = 'Blogs'
+    Title = Column(String(1000), nullable=False)
+    UserDB = Column(String(1000), primary_key=True, nullable=False)

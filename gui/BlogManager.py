@@ -100,7 +100,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.refreshPosts()
 
     def blogMgmt(self):
-        self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session)
+        self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session,"Databases/Posts_"+(self.dbname.split("/")[1].split("_")[1]),self.dbname)
 
     def refreshPosts(self):
         existing_posts = self.sessionP.query(Post).all()
@@ -109,28 +109,3 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         for post in existing_posts:
             self.posts.append(post)
             self.PostList.addItem(post.Title)
-
-    # def addUser(self, Username, Password, isAdmin):
-    #     if self.loggedInUser.isAdmin:
-    #         for u in self.users:
-    #             if Username == u.Username:
-    #                 print("This user already exists!")
-    #                 return
-    #         user = User()
-    #         user.Username = Username
-    #         user.Password = Password
-    #         user.isAdmin = isAdmin
-    #         self.session.add(user)
-    #         self.session.commit()
-    #         self.users.append(user)
-    #         return
-    #     print("You are not admin!")
-
-    # def printUsers(self):
-    #     for u in self.users:
-    #         print(u.Username)
-
-# a.addPost("asdf", "lorem ipsum dolor sit amet")
-# a.addUser(input(), blake2s(input().encode()).hexdigest(), True)
-# a.printPosts()
-# a.printUsers()

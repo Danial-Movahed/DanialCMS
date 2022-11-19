@@ -11,17 +11,17 @@ class Blogs(Base):
     UserDB = Column(String(1000), primary_key=True, nullable=False)
 
 
+engine = create_engine('sqlite:///Databases/Blogs.db')
+Base.metadata.create_all(engine)
+Session = sessionmaker(bind=engine)
+session = Session()
+
+
 class User(Base):
     __tablename__ = 'UserDB'
     Username = Column(String(1000), primary_key=True, nullable=False)
     Password = Column(String(1000), nullable=False)
     isAdmin = Column(Boolean(), nullable=False)
-
-
-engine = create_engine('sqlite:///Databases/Blogs.db')
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
 
 
 class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
@@ -45,7 +45,6 @@ class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
 
     def createBlog(self):
         blog = Blogs()
-        print(self.BlogTitle.text())
         blog.Title = self.BlogTitle.text()
         dbname = "Databases/Users_"+blog.Title+".db"
         i = 1
@@ -53,7 +52,6 @@ class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
             dbname = "Databases/Users_"+blog.Title+str(i)+".db"
             i += 1
         blog.UserDB = dbname
-        print(dbname)
         session.add(blog)
         session.commit()
         self.engine = create_engine('sqlite:///'+dbname)

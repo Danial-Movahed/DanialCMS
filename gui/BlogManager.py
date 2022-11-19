@@ -1,6 +1,6 @@
 from ast import Delete
 from hashlib import blake2s
-from sqlalchemy import Column, Boolean, String, delete
+from sqlalchemy import Column, Boolean, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -102,9 +102,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
     def deletePost(self):
         self.dlg = CDialog("Are you sure you want to delete this post?", "Question!", False, self)
         if self.dlg.exec():
-            print(self.PostList.selectedItems()[0].text())
-            self.session.delete(self.session).where(self.session.Post.Title=="test2")
-            self.session.commit()
+            self.sessionP.delete(self.sessionP.query(Post).filter(Post.Title==self.PostList.selectedItems()[0].text()).first())
+            self.sessionP.commit()
             self.refreshPosts()
         else:
             print("Cancel!")

@@ -1,4 +1,5 @@
 from ast import Delete
+from gettext import find
 from hashlib import blake2s
 from sqlalchemy import Column, Boolean, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -58,7 +59,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         self.BlogTitle.setText(title)
         self.NewPost.clicked.connect(lambda: self.addPost())
         self.ViewPost.clicked.connect(lambda: self.viewPost())
-        # self.EditPost.clicked.connect(lambda: self.editPost())
+        self.EditPost.clicked.connect(lambda: self.editPost())
         self.DeletePost.clicked.connect(lambda: self.deletePost())
         self.show()
         self.engine = create_engine('sqlite:///'+self.dbname)
@@ -94,21 +95,47 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.dlg = CDialog("Please select a post!", "Error!", True, self)
             self.dlg.exec()
             return
+        title = self.PostList.selectedItems()[0].text()
+        self.editCreateWnd = ShowPost.ShowPost(
+                    title, self.findPostByTitle(title).Message)
+    def findPostByTitle(self,postTitle):
         for post in self.posts:
-            if post.Title == self.PostList.selectedItems()[0].text():
-                self.editCreateWnd = ShowPost.ShowPost(
-                    post.Title, post.Message)
-                return
-    def deletePost(self):
-        self.dlg = CDialog("Are you sure you want to delete this post?", "Question!", False, self)
+            if post.Title == postTitle:
+                return post
+        return None
+
+    def deletePost(self,title=None):
+        if not title==None:
+            self.sessionP.delete(self.sessionP.query(Post).filter(
+                Post.Title == title).first())
+            self.sessionP.commit()
+            self.refreshPosts()
+            return
+        self.dlg = CDialog(
+            "Are you sure you want to delete this post?", "Question!", False, self)
         if self.dlg.exec():
-            self.sessionP.delete(self.sessionP.query(Post).filter(Post.Title==self.PostList.selectedItems()[0].text()).first())
+            self.sessionP.delete(self.sessionP.query(Post).filter(
+                Post.Title == self.PostList.selectedItems()[0].text()).first())
             self.sessionP.commit()
             self.refreshPosts()
         else:
             print("Cancel!")
 
         return
+
+    def editPost(self):
+        title = self.PostList.selectedItems()[0].text()
+        self.editCreateWnd = EditCreate.EditCreate(title,self.findPostByTitle(title).Message)
+        self.deletePost(title)
+        self.editCreateWnd.closeEvent = self.saveEditPost
+    def saveEditPost(self,e):
+        if self.editCreateWnd.status:
+            post = Post()
+            post.Title = self.editCreateWnd.EditCreatePostTitle.text()
+            post.Message = self.editCreateWnd.EditCreatePostMessage.toPlainText()
+            self.sessionP.add(post)
+            self.sessionP.commit()
+            self.refreshPosts()
     def refreshPosts(self):
         existing_posts = self.sessionP.query(Post).all()
         self.PostList.clear()

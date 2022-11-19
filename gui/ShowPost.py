@@ -1,8 +1,4 @@
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtMultimedia import *
-from PyQt5.QtMultimediaWidgets import *
+from .main import *
 from . import ui_ShowPost
 
 class ShowPost(QMainWindow, ui_ShowPost.Ui_MainWindow):

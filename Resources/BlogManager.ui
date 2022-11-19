@@ -63,7 +63,7 @@ padding: 5px 10px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_4">
+       <widget class="QPushButton" name="BlogMgmt">
         <property name="font">
          <font>
           <pointsize>15</pointsize>
@@ -73,7 +73,7 @@ padding: 5px 10px;</string>
          <string notr="true"/>
         </property>
         <property name="text">
-         <string>Manage Blog</string>
+         <string>Blog Management</string>
         </property>
        </widget>
       </item>

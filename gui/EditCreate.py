@@ -1,8 +1,4 @@
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtMultimedia import *
-from PyQt5.QtMultimediaWidgets import *
+from .main import *
 from . import ui_EditCreatePost
 
 class EditCreate(QMainWindow, ui_EditCreatePost.Ui_MainWindow):

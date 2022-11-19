@@ -1,31 +1,9 @@
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtMultimedia import *
-from PyQt5.QtMultimediaWidgets import *
-from sqlalchemy import Column, Boolean, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
-from hashlib import blake2s
+from .main import *
 from . import ui_Login,BlogManager
 
-Base = declarative_base()
-
 def LoggedIn(u, title, dbname):
-    global LoggedInUser
-    LoggedInUser = u
-    print(LoggedInUser.Username)
     global blogmgrwnd
     blogmgrwnd = BlogManager.Blog(u,title, dbname)
-
-
-class User(Base):
-    __tablename__ = 'UserDB'
-    Username = Column(String(1000), primary_key=True, nullable=False)
-    Password = Column(String(1000), nullable=False)
-    isAdmin = Column(Boolean(), nullable=False)
-
 
 class BlogLogin(QMainWindow, ui_Login.Ui_MainWindow):
     def __init__(self, dbname, title):

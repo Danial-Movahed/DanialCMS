@@ -1,15 +1,5 @@
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtMultimedia import *
-from PyQt5.QtMultimediaWidgets import *
-from sqlalchemy import Column, Boolean, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+from gui.main import *
 from gui import ui_CreateBlogWizard, ui_BlogPicker
-from os import path
-from hashlib import blake2s
 from gui.Login import *
 
 Base = declarative_base()

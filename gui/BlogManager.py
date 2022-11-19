@@ -77,8 +77,6 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
                 Post.Title == self.PostList.selectedItems()[0].text()).first())
             self.sessionP.commit()
             self.refreshPosts()
-        else:
-            print("Cancel!")
         return
 
     def editPost(self):

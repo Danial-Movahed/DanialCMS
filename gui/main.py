@@ -39,6 +39,7 @@ class Post(Base):
     __tablename__ = 'PostDB'
     Title = Column(String(), primary_key=True, nullable=False)
     Message = Column(String(), nullable=False)
+    Writer = Column(String(), nullable=False)
 
 
 class User(Base):

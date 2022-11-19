@@ -40,6 +40,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             post = Post()
             post.Title = self.editCreateWnd.EditCreatePostTitle.text()
             post.Message = self.editCreateWnd.EditCreatePostMessage.toPlainText()
+            post.Writer = self.loggedInUser.Username
             self.sessionP.add(post)
             self.sessionP.commit()
             self.refreshPosts()
@@ -95,6 +96,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             post = Post()
             post.Title = self.editCreateWnd.EditCreatePostTitle.text()
             post.Message = self.editCreateWnd.EditCreatePostMessage.toPlainText()
+            post.Writer = self.loggedInUser.Username
             self.sessionP.add(post)
             self.sessionP.commit()
             self.refreshPosts()

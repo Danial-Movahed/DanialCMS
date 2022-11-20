@@ -72,6 +72,11 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.dlg = CDialog("Please select a post!", "Error!", True, self)
             self.dlg.exec()
             return
+        if not self.loggedInUser.isAdmin and self.sessionP.query(Post).filter(Post.Title == self.PostList.selectedItems()[0].text()).first().Writer != self.loggedInUser.Username:
+            self.dlg = CDialog(
+                "This post is not yours!", "Error!", True, self)
+            self.dlg.exec()
+            return
         self.dlg = CDialog(
             "Are you sure you want to delete this post?", "Question!", False, self)
         if self.dlg.exec():
@@ -84,6 +89,11 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
     def editPost(self):
         if len(self.PostList.selectedItems()) < 1:
             self.dlg = CDialog("Please select a post!", "Error!", True, self)
+            self.dlg.exec()
+            return
+        if not self.loggedInUser.isAdmin and self.sessionP.query(Post).filter(Post.Title == self.PostList.selectedItems()[0].text()).first().Writer != self.loggedInUser.Username:
+            self.dlg = CDialog(
+                "This post is not yours!", "Error!", True, self)
             self.dlg.exec()
             return
         title = self.PostList.selectedItems()[0].text()

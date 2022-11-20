@@ -36,6 +36,12 @@ class Ui_MainWindow(object):
         self.ShowPostPostMessage.setFont(font)
         self.ShowPostPostMessage.setObjectName("ShowPostPostMessage")
         self.verticalLayout.addWidget(self.ShowPostPostMessage)
+        self.ShowPostWriter = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.ShowPostWriter.setFont(font)
+        self.ShowPostWriter.setObjectName("ShowPostWriter")
+        self.verticalLayout.addWidget(self.ShowPostWriter)
         self.verticalLayout_2.addLayout(self.verticalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -53,3 +59,4 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.ShowPostPostTitle.setText(_translate("MainWindow", "Title"))
+        self.ShowPostWriter.setText(_translate("MainWindow", "TextLabel"))

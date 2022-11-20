@@ -51,8 +51,9 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.dlg.exec()
             return
         title = self.PostList.selectedItems()[0].text()
+        post = self.findPostByTitle(title)
         self.editCreateWnd = ShowPost.ShowPost(
-            title, self.findPostByTitle(title).Message)
+            title, post.Message, post.Writer)
 
     def findPostByTitle(self, postTitle):
         for post in self.posts:

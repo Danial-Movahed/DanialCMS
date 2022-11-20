@@ -13,11 +13,21 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
         self.postDBName = postDBName
         self.usersDBName = usersDBName
         self.loggedInUser = loggedInUser
-        self.refreshUsers()
-        self.BlogMgmtDeleteUser.clicked.connect(lambda: self.deleteUser())
-        self.BlogMgmtAddUser.clicked.connect(lambda: self.addUser())
-        self.BlogMgmtDeleteBlog.clicked.connect(lambda: self.deleteBlog())
+        if loggedInUser.isAdmin:
+            self.refreshUsers()
+            self.BlogMgmtDeleteUser.clicked.connect(lambda: self.deleteUser())
+            self.BlogMgmtAddUser.clicked.connect(lambda: self.addUser())
+            self.BlogMgmtDeleteBlog.clicked.connect(lambda: self.deleteBlog())
+        else:
+            self.BlogMgmtDeleteUser.clicked.connect(lambda: self.errorOut())
+            self.BlogMgmtAddUser.clicked.connect(lambda: self.errorOut())
+            self.BlogMgmtDeleteBlog.clicked.connect(lambda: self.errorOut())
         self.show()
+
+    def errorOut(self):
+        self.dlg = CDialog(
+                "You are not an administrator!", "Error!", True, self)
+        self.dlg.exec()
 
     def refreshUsers(self):
         existing_users = self.session.query(User).all()

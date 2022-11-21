@@ -211,7 +211,6 @@ padding: 0px 5px;</string>
     <property name="title">
      <string>Options</string>
     </property>
-    <addaction name="actionMr_Ahmadi_Mode_2"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuOptions"/>

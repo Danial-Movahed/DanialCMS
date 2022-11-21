@@ -37,6 +37,7 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
         self.BlogMgmtUsersList.clear()
         for user in existing_users:
             self.UsersList.append(user)
+            SocketSystem.userList.append(user)
             self.BlogMgmtUsersList.addItem(user.Username)
             if user.isAdmin:
                 self.adminCount += 1

@@ -12,7 +12,7 @@ from os import path, remove
 import socket
 import threading
 import select
-
+import pickle
 
 Base = declarative_base()
 
@@ -42,6 +42,7 @@ class Post(Base):
     Title = Column(String(), primary_key=True, nullable=False)
     Message = Column(String(), nullable=False)
     Writer = Column(String(), nullable=False)
+    ReadBy = Column(String(), nullable=True)
 
 
 class User(Base):

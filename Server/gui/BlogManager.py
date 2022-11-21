@@ -31,11 +31,10 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         self.savedPost = Post()
 
         existing_users = self.session.query(User).all()
-        self.users = []
+        SocketSystem.userList = []
         for user in existing_users:
-            self.users.append(user)
-
-        self.serverThread = threading.Thread(target = SocketSystem.runServer, args = (self.users,))
+            SocketSystem.userList.append(user)
+        self.serverThread = threading.Thread(target = SocketSystem.runServer, args = (title,))
         self.serverThread.daemon = True
         self.serverThread.start()
 
@@ -55,6 +54,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.sessionP.add(post)
             self.sessionP.commit()
             self.refreshPosts()
+            for conn in SocketSystem.conn:
+                conn.whatWrk = "n"
 
     def viewPost(self):
         if len(self.PostList.selectedItems()) < 1:
@@ -78,6 +79,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
                 Post.Title == title).first())
             self.sessionP.commit()
             self.refreshPosts()
+            for conn in SocketSystem.conn:
+                conn.whatWrk = "d"
             return
         if len(self.PostList.selectedItems()) < 1:
             self.dlg = CDialog("Please select a post!", "Error!", True, self)
@@ -95,6 +98,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
                 Post.Title == self.PostList.selectedItems()[0].text()).first())
             self.sessionP.commit()
             self.refreshPosts()
+            for conn in SocketSystem.conn:
+                conn.whatWrk = "d"
         return
 
     def editPost(self):
@@ -123,12 +128,16 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.sessionP.add(post)
             self.sessionP.commit()
             self.refreshPosts()
+            for conn in SocketSystem.conn:
+                conn.whatWrk = "e"
         else:
             make_transient(self.savedPost)
             self.savedPost._oid=None
             self.sessionP.add(self.savedPost)
             self.sessionP.commit()
             self.refreshPosts()
+            for conn in SocketSystem.conn:
+                conn.whatWrk = "e"
 
     def blogMgmt(self):
         self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session,"Databases/Posts_"+(self.dbname.split("/")[1].split("_")[1]),self.dbname,self.loggedInUser)
@@ -137,6 +146,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         existing_posts = self.sessionP.query(Post).all()
         self.PostList.clear()
         self.posts = []
+        SocketSystem.postList = []
         for post in existing_posts:
             self.posts.append(post)
+            SocketSystem.postList.append(post)
             self.PostList.addItem(post.Title)

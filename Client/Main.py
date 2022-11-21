@@ -36,9 +36,10 @@ class client_thread(threading.Thread):
                 self.shblgvHndl.refreshPosts()
 
 class ShowBlogViewer(QMainWindow, ui_BlogViewer.Ui_MainWindow):
-    def __init__(self,blogTitle):
+    def __init__(self,blogTitle,socket):
         super().__init__()
         self.setupUi(self)
+        self.socket = socket
         self.BlogTitle.setText(blogTitle)
         self.setWindowTitle("DanialCMS blog viewer")
         self.ViewPost.clicked.connect(lambda: self.ShowPost())
@@ -57,6 +58,7 @@ class ShowBlogViewer(QMainWindow, ui_BlogViewer.Ui_MainWindow):
             return
         title = self.PostList.selectedItems()[0].text()
         post = self.findPostByTitle(title)
+        self.socket.sendall(title.encode())
         self.editCreateWnd = ShowPost.ShowPost(
             title, post.Message, post.Writer)
     def findPostByTitle(self, title):
@@ -90,7 +92,7 @@ class ShowLogin(QMainWindow, ui_Login.Ui_MainWindow):
                 self.loggedIn.Password = blake2s(
                     self.LoginPassword.text().encode()).hexdigest()
                 self.close()
-                self.shblgvHndl = ShowBlogViewer(tmp[1])
+                self.shblgvHndl = ShowBlogViewer(tmp[1],self.s)
                 self.dataReceive = client_thread(self.s,self.shblgvHndl)
                 self.dataReceive.daemon = True
                 self.dataReceive.start()

@@ -4,7 +4,7 @@ from . import EditCreate, ui_BlogManager, ShowPost, BlogMgmt
 
 
 class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
-    def __init__(self,loggedInUser, title, dbname):
+    def __init__(self, loggedInUser, title, dbname):
         super().__init__()
         self.setupUi(self)
         self.title = title
@@ -34,9 +34,13 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         SocketSystem.userList = []
         for user in existing_users:
             SocketSystem.userList.append(user)
-        self.serverThread = threading.Thread(target = SocketSystem.runServer, args = (title,))
+        self.serverThread = threading.Thread(
+            target=SocketSystem.runServer, args=(title,))
         self.serverThread.daemon = True
         self.serverThread.start()
+        self.rssServerThread = threading.Thread(target=SocketSystem.runRSSServer,args=())
+        self.rssServerThread.daemon = True
+        self.rssServerThread.start()
 
         self.posts = []
         self.refreshPosts()
@@ -63,12 +67,20 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.dlg.exec()
             return
         title = self.PostList.selectedItems()[0].text()
+        self.sessionP.query(Post).filter(Post.Title == title).ReadBy = self.findPostByTitleInSocket(title).ReadBy
+        self.sessionP.commit()
         post = self.findPostByTitle(title)
         self.editCreateWnd = ShowPost.ShowPost(
-            title, post.Message, post.Writer)
+            title, post.Message, post.Writer, post.ReadBy)
 
     def findPostByTitle(self, postTitle):
         for post in self.posts:
+            if post.Title == postTitle:
+                return post
+        return None
+
+    def findPostByTitleInSocket(self, postTitle):
+        for post in SocketSystem.postList:
             if post.Title == postTitle:
                 return post
         return None
@@ -132,7 +144,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
                 conn.whatWrk = "e"
         else:
             make_transient(self.savedPost)
-            self.savedPost._oid=None
+            self.savedPost._oid = None
             self.sessionP.add(self.savedPost)
             self.sessionP.commit()
             self.refreshPosts()
@@ -140,14 +152,26 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
                 conn.whatWrk = "e"
 
     def blogMgmt(self):
-        self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session,"Databases/Posts_"+(self.dbname.split("/")[1].split("_")[1]),self.dbname,self.loggedInUser)
+        self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session, "Databases/Posts_"+(
+            self.dbname.split("/")[1].split("_")[1]), self.dbname, self.loggedInUser)
 
     def refreshPosts(self):
         existing_posts = self.sessionP.query(Post).all()
         self.PostList.clear()
         self.posts = []
         SocketSystem.postList = []
+        fg = FeedGenerator()
+        fg.link(href="http://"+SocketSystem.get_ip_address()+":8080",rel="alternate")
+        fg.title(self.title)
+        fg.description("A DanialCMS blog!")
+        fg.language('en')
         for post in existing_posts:
             self.posts.append(post)
             SocketSystem.postList.append(post)
             self.PostList.addItem(post.Title)
+        
+            fe = fg.add_entry()
+            fe.id(post.Message)
+            fe.title(post.Title)
+        print(fg.rss_str(pretty=True))
+        SocketSystem.rss = fg.rss_str(pretty=True)

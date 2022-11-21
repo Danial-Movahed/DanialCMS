@@ -4,6 +4,7 @@ from time import sleep
 conn = []
 userList = []
 postList = []
+rss = ""
 id = 0
 
 
@@ -11,6 +12,15 @@ def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     return s.getsockname()[0]
+
+
+class RSSServer(BaseHTTPRequestHandler):
+    def do_GET(self):
+        global rss
+        self.send_response(200)
+        self.send_header("Content-type", "application/rss+xml")
+        self.end_headers()
+        self.wfile.write(rss)
 
 
 class client_thread(threading.Thread):
@@ -93,6 +103,20 @@ class client_thread(threading.Thread):
                         self.clientsocket.send("Done".encode())
                         sleep(0.1)
                         self.whatWrk = ""
+                    
+
+                    ready = select.select([self.clientsocket], [], [], 1)
+                    if ready[0]:
+                        data = self.clientsocket.recv(4096)
+                        data=data.decode()
+                        print(data)
+                        for i in range(len(postList)):
+                            if postList[i].Title == data:
+                                try:
+                                    postList[i].ReadBy+=", "+self.loggedInUser.Username
+                                except:
+                                    postList[i].ReadBy=self.loggedInUser.Username
+
                 self.clientsocket.send("keep-alive".encode())
                 sleep(0.1)
             except:
@@ -114,3 +138,7 @@ def runServer(blogTitle):
         conn.append(client_thread(clientsocket, id, blogTitle))
         conn[id].start()
         id += 1
+
+def runRSSServer():
+    webServer = HTTPServer(("", 8080), RSSServer)
+    webServer.serve_forever()

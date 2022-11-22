@@ -13,6 +13,7 @@ class client_thread(threading.Thread):
     def run(self):
         global postList
         status = ""
+        ifNotify=False
         while True:
             data = self.clientsocket.recv(4096)
             try:
@@ -24,8 +25,9 @@ class client_thread(threading.Thread):
                         continue
                     status = data
                     if status == "NP":
+                        if platform.system() == "Linux":
+                            ifNotify = True
                         continue
-                        # Notification
                     elif status == "FS":
                         continue
                     elif status == "EP" or status == "DP":
@@ -33,6 +35,9 @@ class client_thread(threading.Thread):
                         continue
             except:
                 postList.append(pickle.loads(data))
+                if ifNotify:
+                    subprocess.Popen(["notify-send","New post!",postList[-1].Title])
+                    ifNotify = False
                 self.shblgvHndl.refreshPosts()
 
 class ShowBlogViewer(QMainWindow, ui_BlogViewer.Ui_MainWindow):

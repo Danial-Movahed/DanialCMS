@@ -10,6 +10,8 @@ import socket
 import select
 import threading
 import pickle
+import platform
+import subprocess
 
 Base = declarative_base()
 

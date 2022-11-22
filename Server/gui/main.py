@@ -45,6 +45,7 @@ class Post(Base):
     Message = Column(String(), nullable=False)
     Writer = Column(String(), nullable=False)
     ReadBy = Column(String(), nullable=True)
+    WhoCanRead = Column(String(), nullable=True)
 
 
 class User(Base):

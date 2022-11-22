@@ -55,6 +55,9 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             post.Title = self.editCreateWnd.EditCreatePostTitle.text()
             post.Message = self.editCreateWnd.EditCreatePostMessage.toPlainText()
             post.Writer = self.loggedInUser.Username
+            post.WhoCanRead = self.editCreateWnd.EditCreateWhoCanRead.text()
+            if self.loggedInUser.Username not in post.WhoCanRead.split(" "):
+                post.WhoCanRead+=" "+self.loggedInUser.Username
             self.sessionP.add(post)
             self.sessionP.commit()
             self.refreshPosts()
@@ -127,7 +130,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         title = self.PostList.selectedItems()[0].text()
         self.savedPost = self.findPostByTitle(title)
         self.editCreateWnd = EditCreate.EditCreate(
-            title, self.findPostByTitle(title).Message)
+            title, self.savedPost.Message, self.savedPost.WhoCanRead)
         self.deletePost(title)
         self.editCreateWnd.closeEvent = self.saveEditPost
 
@@ -137,6 +140,9 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             post.Title = self.editCreateWnd.EditCreatePostTitle.text()
             post.Message = self.editCreateWnd.EditCreatePostMessage.toPlainText()
             post.Writer = self.loggedInUser.Username
+            post.WhoCanRead = self.editCreateWnd.EditCreateWhoCanRead.text()
+            if self.loggedInUser.Username not in post.WhoCanRead.split(" "):
+                post.WhoCanRead+=" "+self.loggedInUser.Username
             self.sessionP.add(post)
             self.sessionP.commit()
             self.refreshPosts()
@@ -166,12 +172,11 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         fg.description("A DanialCMS blog!")
         fg.language('en')
         for post in existing_posts:
-            self.posts.append(post)
+            if self.loggedInUser.Username in post.WhoCanRead.split(" "):
+                self.posts.append(post)
+                self.PostList.addItem(post.Title)
             SocketSystem.postList.append(post)
-            self.PostList.addItem(post.Title)
-        
             fe = fg.add_entry()
             fe.id(post.Message)
             fe.title(post.Title)
-        print(fg.rss_str(pretty=True))
         SocketSystem.rss = fg.rss_str(pretty=True)

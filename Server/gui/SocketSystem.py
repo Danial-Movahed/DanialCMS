@@ -68,28 +68,31 @@ class client_thread(threading.Thread):
                         self.clientsocket.send("FS".encode())
                         sleep(0.1)
                         for p in postList:
-                            tmp = pickle.dumps(p)
-                            self.clientsocket.send(tmp)
-                            sleep(0.1)
+                            if self.loggedInUser.Username in p.WhoCanRead.split(" "):
+                                tmp = pickle.dumps(p)
+                                self.clientsocket.send(tmp)
+                                sleep(0.1)
                         self.clientsocket.send("Done".encode())
                         sleep(0.1)
                         self.whatWrk = ""
                     elif self.whatWrk == "n":
-                        self.clientsocket.send("NP".encode())
-                        sleep(0.1)
-                        tmp = pickle.dumps(postList[-1])
-                        self.clientsocket.send(tmp)
-                        sleep(0.1)
-                        self.clientsocket.send("Done".encode())
-                        sleep(0.1)
+                        if self.loggedInUser.Username in postList[-1].WhoCanRead.split(" "):
+                            self.clientsocket.send("NP".encode())
+                            sleep(0.1)
+                            tmp = pickle.dumps(postList[-1])
+                            self.clientsocket.send(tmp)
+                            sleep(0.1)
+                            self.clientsocket.send("Done".encode())
+                            sleep(0.1)
                         self.whatWrk = ""
                     elif self.whatWrk == "e":
                         self.clientsocket.send("EP".encode())
                         sleep(0.1)
                         for p in postList:
-                            tmp = pickle.dumps(p)
-                            self.clientsocket.send(tmp)
-                            sleep(0.1)
+                            if self.loggedInUser.Username in p.WhoCanRead.split(" "):
+                                tmp = pickle.dumps(p)
+                                self.clientsocket.send(tmp)
+                                sleep(0.1)
                         self.clientsocket.send("Done".encode())
                         sleep(0.1)
                         self.whatWrk = ""
@@ -97,9 +100,10 @@ class client_thread(threading.Thread):
                         self.clientsocket.send("DP".encode())
                         sleep(0.1)
                         for p in postList:
-                            tmp = pickle.dumps(p)
-                            self.clientsocket.send(tmp)
-                            sleep(0.1)
+                            if self.loggedInUser.Username in p.WhoCanRead.split(" "):
+                                tmp = pickle.dumps(p)
+                                self.clientsocket.send(tmp)
+                                sleep(0.1)
                         self.clientsocket.send("Done".encode())
                         sleep(0.1)
                         self.whatWrk = ""

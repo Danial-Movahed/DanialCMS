@@ -34,10 +34,6 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         SocketSystem.userList = []
         for user in existing_users:
             SocketSystem.userList.append(user)
-        self.serverThread = threading.Thread(
-            target=SocketSystem.runServer, args=(title,))
-        self.serverThread.daemon = True
-        self.serverThread.start()
         self.rssServerThread = threading.Thread(target=SocketSystem.runRSSServer,args=())
         self.rssServerThread.daemon = True
         self.rssServerThread.start()

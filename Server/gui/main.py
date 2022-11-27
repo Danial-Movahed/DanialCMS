@@ -59,3 +59,19 @@ class Blogs(Base):
     __tablename__ = 'Blogs'
     Title = Column(String(1000), nullable=False)
     UserDB = Column(String(1000), primary_key=True, nullable=False)
+
+class ErrorDialog(QDialog):
+    def __init__(self, label, parent=None):
+        super().__init__(parent)
+
+        self.setWindowTitle("Error!")
+
+        QBtn = QDialogButtonBox.Ok
+
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(lambda: self.close())
+        self.layout = QVBoxLayout()
+        message = QLabel(label)
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)

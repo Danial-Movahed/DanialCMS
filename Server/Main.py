@@ -1,5 +1,5 @@
 from gui.main import *
-from gui import ui_CreateBlogWizard, ui_BlogPicker
+from gui import ui_CreateBlogWizard, ui_BlogPicker, SocketSystem
 from gui.Login import *
 
 Base = declarative_base()
@@ -67,23 +67,6 @@ class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
         self.close()
 
 
-class ErrorDialog(QDialog):
-    def __init__(self, label, parent=None):
-        super().__init__(parent)
-
-        self.setWindowTitle("Error!")
-
-        QBtn = QDialogButtonBox.Ok
-
-        self.buttonBox = QDialogButtonBox(QBtn)
-        self.buttonBox.accepted.connect(lambda: self.close())
-        self.layout = QVBoxLayout()
-        message = QLabel(label)
-        self.layout.addWidget(message)
-        self.layout.addWidget(self.buttonBox)
-        self.setLayout(self.layout)
-
-
 class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
     def __init__(self):
         super(BlogPicker, self).__init__()
@@ -94,17 +77,27 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
         self.LoadBlogbtn.clicked.connect(lambda: self.loadblog())
         self.refresh()
         self.setWindowTitle("DanialCMS")
+        self.serverThread = threading.Thread(
+            target=SocketSystem.runServer, args=())
+        self.serverThread.daemon = True
+        self.serverThread.start()
         self.show()
 
     def startWizard(self):
         self.wzd = CreateBlogWizard()
-        self.wzd.closeEvent = self.refresh
+        self.wzd.closeEvent = self.saveBlog
 
-    def refresh(self, e=None):
+    def saveBlog(self, e):
+        self.refresh()
+        for conn in SocketSystem.conn:
+            conn.whatWrk = "n"
+
+    def refresh(self):
         existing_Blogs = session.query(Blogs).all()
         self.ListBlogs.clear()
         for blog in existing_Blogs:
             self.ListBlogs.addItem(blog.Title+", "+blog.UserDB)
+            SocketSystem.blogList.append(blog)
 
     def loadblog(self):
         if len(self.ListBlogs.selectedItems()) < 1:

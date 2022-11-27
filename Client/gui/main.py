@@ -47,3 +47,9 @@ class CDialog(QDialog):
         self.layout.addWidget(message)
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
+
+class Blogs(Base):
+    __tablename__ = 'Blogs'
+    Title = Column(String(1000), nullable=False)
+    UserDB = Column(String(1000), primary_key=True, nullable=False)
+    isSub = False

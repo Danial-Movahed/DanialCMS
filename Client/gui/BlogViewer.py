@@ -26,7 +26,7 @@ class ShowBlogViewer(QMainWindow, ui_BlogViewer.Ui_MainWindow):
             return
         title = self.PostList.selectedItems()[0].text()
         post = self.findPostByTitle(title)
-        self.socket.sendall(self.selfBlog.UserDB+"/"+title.encode()+"/"+self.username)
+        self.socket.sendall((self.selfBlog.UserDB+"/"+title+"/"+self.username).encode())
         self.editCreateWnd = ShowPost.ShowPost(
             title, post.Message, post.Writer)
     def findPostByTitle(self, title):

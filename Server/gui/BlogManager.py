@@ -65,20 +65,14 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.dlg.exec()
             return
         title = self.PostList.selectedItems()[0].text()
-        self.sessionP.query(Post).filter(Post.Title == title).ReadBy = self.findPostByTitleInSocket(title).ReadBy
-        self.sessionP.commit()
+        self.refreshPosts()
         post = self.findPostByTitle(title)
         self.editCreateWnd = ShowPost.ShowPost(
             title, post.Message, post.Writer, post.ReadBy)
 
     def findPostByTitle(self, postTitle):
-        for post in self.posts:
-            if post.Title == postTitle:
-                return post
-        return None
-
-    def findPostByTitleInSocket(self, postTitle):
-        for post in SocketSystem.postList:
+        existing_posts = self.sessionP.query(Post).all()
+        for post in existing_posts:
             if post.Title == postTitle:
                 return post
         return None
@@ -165,11 +159,11 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         existing_posts = self.sessionP.query(Post).all()
         self.PostList.clear()
         self.posts = []
-        fg = FeedGenerator()
-        fg.link(href="http://"+SocketSystem.get_ip_address()+":8080",rel="alternate")
-        fg.title(self.title)
-        fg.description("A DanialCMS blog!")
-        fg.language('en')
+        # fg = FeedGenerator()
+        # fg.link(href="http://"+SocketSystem.get_ip_address()+":8080",rel="alternate")
+        # fg.title(self.title)
+        # fg.description("A DanialCMS blog!")
+        # fg.language('en')
         for post in existing_posts:
             if post.isPrivate:
                 if self.loggedInUser.Username in post.WhoCanRead.split(" "):
@@ -178,7 +172,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             else:
                 self.posts.append(post)
                 self.PostList.addItem(post.Title)
-            fe = fg.add_entry()
-            fe.id(post.Message)
-            fe.title(post.Title)
-        SocketSystem.rss = fg.rss_str(pretty=True)
+        #     fe = fg.add_entry()
+        #     fe.id(post.Message)
+        #     fe.title(post.Title)
+        # SocketSystem.rss = fg.rss_str(pretty=True)

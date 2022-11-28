@@ -46,12 +46,18 @@ class client_thread(threading.Thread):
                             if tmp.BlogUserDB == b.UserDB:
                                 if status == "NP":
                                     if b.WndHndl != None:
+                                        if tmp.isPrivate and not b.username in tmp.WhoCanRead:
+                                            break
                                         b.WndHndl.postList.append(tmp)
                                         b.WndHndl.refreshPosts()
-                                    self.blgPkrHndl.checkNotif(tmp,b)
+                                    if not tmp.isPrivate:
+                                        self.blgPkrHndl.checkNotif(tmp,b)
                                 elif b.WndHndl != None:
+                                    if tmp.isPrivate and not b.username in tmp.WhoCanRead:
+                                            break
                                     b.WndHndl.postList.append(tmp)
                                     b.WndHndl.refreshPosts()
+                                break
 
 
 class ShowBlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):

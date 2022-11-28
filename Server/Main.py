@@ -5,23 +5,23 @@ from gui.Login import *
 Base = declarative_base()
 
 
-class Blogs(Base):
-    __tablename__ = 'Blogs'
-    Title = Column(String(1000), nullable=False)
-    UserDB = Column(String(1000), primary_key=True, nullable=False)
-
-
-engine = create_engine('sqlite:///Databases/Blogs.db')
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
-
 
 class User(Base):
     __tablename__ = 'UserDB'
     Username = Column(String(1000), primary_key=True, nullable=False)
     Password = Column(String(1000), nullable=False)
     isAdmin = Column(Boolean(), nullable=False)
+class Blogs(Base):
+    __tablename__ = 'Blogs'
+    Title = Column(String(1000), nullable=False)
+    UserDB = Column(String(1000), primary_key=True, nullable=False)
+    WndHndl = None
+
+
+engine = create_engine('sqlite:///Databases/Blogs.db')
+Base.metadata.create_all(engine)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 
 class CreateBlogWizard(QMainWindow, ui_CreateBlogWizard.Ui_MainWindow):
@@ -95,6 +95,7 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
     def refresh(self):
         existing_Blogs = session.query(Blogs).all()
         self.ListBlogs.clear()
+        SocketSystem.blogList=[]
         for blog in existing_Blogs:
             self.ListBlogs.addItem(blog.Title+", "+blog.UserDB)
             SocketSystem.blogList.append(blog)

@@ -133,7 +133,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             post.Writer = self.loggedInUser.Username
             post.WhoCanRead = self.editCreateWnd.EditCreateWhoCanRead.text()
             post.BlogUserDB = self.dbname
-            if self.loggedInUser.Username not in post.WhoCanRead.split(" "):
+            post.isPrivate = self.editCreateWnd.isPrivate.isChecked()
+            if self.editCreateWnd.isPrivate.isChecked() and self.loggedInUser.Username not in post.WhoCanRead.split(" "):
                 post.WhoCanRead+=" "+self.loggedInUser.Username
             self.sessionP.add(post)
             self.sessionP.commit()

@@ -35,6 +35,7 @@ class client_thread(threading.Thread):
                                 if b.UserDB == status.split(" ")[1]:
                                     if b.WndHndl != None:
                                         b.WndHndl.postList=[]
+                                        b.WndHndl.refreshPosts()
                 except:
                     tmp = pickle.loads(data)
                     print(type(tmp))

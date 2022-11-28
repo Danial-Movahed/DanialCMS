@@ -53,6 +53,7 @@ class Blogs(Base):
     Title = Column(String(1000), nullable=False)
     UserDB = Column(String(1000), primary_key=True, nullable=False)
     isSub = False
+    WndHndl = None
 
 class BlogLoginObj():
     Title = None

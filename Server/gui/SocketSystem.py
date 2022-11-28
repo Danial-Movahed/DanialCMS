@@ -75,6 +75,9 @@ class client_thread(threading.Thread):
                             sleep(0.5)
                             # load session and send posts
                             pass
+                        else:
+                            self.clientsocket.send("Nope".encode())
+                            sleep(0.5)
 
                 self.clientsocket.send("keep-alive".encode())
                 sleep(0.5)

@@ -33,13 +33,16 @@ class BlogLogin(QMainWindow, ui_Login.Ui_MainWindow):
                     self.label_6.setText("Welcome!")
                     LoggedIn(user, self.title, self.dbname)
                     self.close()
+                    self.session.close()
                     return
             else:
                 print(self.LoginUsername.text())
                 print(self.LoginPassword.text())
                 if self.LoginUsername.text() == user.Username and self.LoginPassword.text() == user.Password:
+                    self.session.close()
                     return True
         if onlyCheck:
+            self.session.close()
             return False
 
         self.label_6.setText("Wrong username or password!")

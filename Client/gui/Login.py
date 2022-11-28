@@ -21,6 +21,8 @@ class Login(QMainWindow, ui_Login.Ui_MainWindow):
         if self.receive() == "Ok":
             self.status = True
             self.close()
+        else:
+            self.label_6.setText("Wrong username or password!")
     def receive(self):
         data = self.sock.recv(4096)
         while data.decode().replace("keep-alive","") == "":

@@ -157,6 +157,7 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
 
     def refreshPosts(self):
         existing_posts = self.sessionP.query(Post).all()
+        self.sessionP.expire_all()
         self.PostList.clear()
         self.posts = []
         # fg = FeedGenerator()

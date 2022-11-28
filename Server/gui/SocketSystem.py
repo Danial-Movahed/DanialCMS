@@ -1,5 +1,6 @@
 from .main import *
 from time import sleep
+from .Login import *
 
 conn = []
 blogList = []
@@ -45,7 +46,7 @@ class client_thread(threading.Thread):
                     self.clientsocket.send("Done".encode())
                     sleep(0.5)
                     self.whatWrk = ""
-                if self.whatWrk == "n":
+                elif self.whatWrk == "n":
                     self.clientsocket.send("NB".encode())
                     sleep(0.5)
                     tmp = pickle.dumps(blogList[-1])
@@ -54,6 +55,27 @@ class client_thread(threading.Thread):
                     self.clientsocket.send("Done".encode())
                     sleep(0.5)
                     self.whatWrk = ""
+
+
+                ready = select.select([self.clientsocket], [], [], 1)
+                if ready[0]:
+                    data = self.clientsocket.recv(4096)
+                    print(data)
+                    try:
+                        data=data.decode()
+                        data=data.split(" ")
+                    except:
+                        tmp=pickle.loads(data)
+                        print(tmp.UserDB)
+                        self.loginWnd = BlogLogin(tmp.UserDB,tmp.Title,False,tmp.Username,tmp.Password)
+                        print("aaaaa")
+                        if self.loginWnd.checkSecrets(True):
+                            print("Yep!")
+                            self.clientsocket.send("Ok".encode())
+                            sleep(0.5)
+                            # load session and send posts
+                            pass
+
                 self.clientsocket.send("keep-alive".encode())
                 sleep(0.5)
             except:

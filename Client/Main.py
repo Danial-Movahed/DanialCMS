@@ -1,9 +1,9 @@
 from os import stat
-from gui import ui_IpSelector, ui_BlogViewer, ShowPost
+from gui import ui_IpSelector, ui_BlogViewer, Login
 from gui.main import *
 
 blogList = []
-
+ifLoggingIn = False
 
 class client_thread(threading.Thread):
     def __init__(self, clientsocket, blgPkrHndl):
@@ -15,23 +15,24 @@ class client_thread(threading.Thread):
         global blogList
         status = ""
         while True:
-            data = self.clientsocket.recv(4096)
-            try:
-                data = data.decode()
-                if not data == "keep-alive":
-                    print(data)
-                    if data == "Done":
-                        status = ""
-                        continue
-                    status = data
-                    if status == "FS" or status == "NB":
-                        continue
-                    elif status == "DB":
-                        blogList = []
-                        continue
-            except:
-                blogList.append(pickle.loads(data))
-                self.blgPkrHndl.refreshBlogs()
+            if not ifLoggingIn:
+                data = self.clientsocket.recv(4096)
+                try:
+                    data = data.decode()
+                    if not data == "keep-alive":
+                        print(data)
+                        if data == "Done":
+                            status = ""
+                            continue
+                        status = data
+                        if status == "FS" or status == "NB":
+                            continue
+                        elif status == "DB":
+                            blogList = []
+                            continue
+                except:
+                    blogList.append(pickle.loads(data))
+                    self.blgPkrHndl.refreshBlogs()
 
 
 class ShowBlogPicker(QMainWindow, ui_BlogViewer.Ui_MainWindow):
@@ -59,8 +60,15 @@ class ShowBlogPicker(QMainWindow, ui_BlogViewer.Ui_MainWindow):
             return
         title = self.BlogList.selectedItems()[0].text()
         blog = self.findBlogByTitle(title)
-        self.editCreateWnd = ShowPost.ShowPost(
-            title, blog.Title)
+        global ifLoggingIn
+        ifLoggingIn=True
+        self.loginBlgWnd = Login.Login(blog,self.socket)
+        self.loginBlgWnd.closeEvent = self.OpenBlog
+
+    def OpenBlog(self,e):
+        ifLoggingIn=False
+        if self.loginBlgWnd.status:
+            print("masalan post gereft!")
 
     def SubToBlog(self):
         if len(self.BlogList.selectedItems()) < 1:

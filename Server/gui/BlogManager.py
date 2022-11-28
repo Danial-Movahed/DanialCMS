@@ -30,13 +30,9 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         self.sessionP = self.SessionP()
         self.savedPost = Post()
 
-        existing_users = self.session.query(User).all()
-        SocketSystem.userList = []
-        for user in existing_users:
-            SocketSystem.userList.append(user)
-        self.rssServerThread = threading.Thread(target=SocketSystem.runRSSServer,args=())
-        self.rssServerThread.daemon = True
-        self.rssServerThread.start()
+        # self.rssServerThread = threading.Thread(target=SocketSystem.runRSSServer,args=())
+        # self.rssServerThread.daemon = True
+        # self.rssServerThread.start()
 
         self.posts = []
         self.refreshPosts()
@@ -52,13 +48,16 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             post.Message = self.editCreateWnd.EditCreatePostMessage.toPlainText()
             post.Writer = self.loggedInUser.Username
             post.WhoCanRead = self.editCreateWnd.EditCreateWhoCanRead.text()
-            if self.loggedInUser.Username not in post.WhoCanRead.split(" "):
+            post.BlogUserDB = self.dbname
+            post.isPrivate = self.editCreateWnd.isPrivate.isChecked()
+            if self.editCreateWnd.isPrivate.isChecked() and self.loggedInUser.Username not in post.WhoCanRead.split(" "):
                 post.WhoCanRead+=" "+self.loggedInUser.Username
             self.sessionP.add(post)
             self.sessionP.commit()
             self.refreshPosts()
             for conn in SocketSystem.conn:
-                conn.whatWrk = "n"
+                conn.whatWrk = "np"
+                conn.whichBlg = self.dbname
 
     def viewPost(self):
         if len(self.PostList.selectedItems()) < 1:
@@ -91,7 +90,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.sessionP.commit()
             self.refreshPosts()
             for conn in SocketSystem.conn:
-                conn.whatWrk = "d"
+                conn.whatWrk = "dp"
+                conn.whichBlg = self.dbname
             return
         if len(self.PostList.selectedItems()) < 1:
             self.dlg = CDialog("Please select a post!", "Error!", True, self)
@@ -110,7 +110,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.sessionP.commit()
             self.refreshPosts()
             for conn in SocketSystem.conn:
-                conn.whatWrk = "d"
+                conn.whatWrk = "dp"
+                conn.whichBlg = self.dbname
         return
 
     def editPost(self):
@@ -137,13 +138,15 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             post.Message = self.editCreateWnd.EditCreatePostMessage.toPlainText()
             post.Writer = self.loggedInUser.Username
             post.WhoCanRead = self.editCreateWnd.EditCreateWhoCanRead.text()
+            post.BlogUserDB = self.dbname
             if self.loggedInUser.Username not in post.WhoCanRead.split(" "):
                 post.WhoCanRead+=" "+self.loggedInUser.Username
             self.sessionP.add(post)
             self.sessionP.commit()
             self.refreshPosts()
             for conn in SocketSystem.conn:
-                conn.whatWrk = "e"
+                conn.whatWrk = "ep"
+                conn.whichBlg = self.dbname
         else:
             make_transient(self.savedPost)
             self.savedPost._oid = None
@@ -151,7 +154,8 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
             self.sessionP.commit()
             self.refreshPosts()
             for conn in SocketSystem.conn:
-                conn.whatWrk = "e"
+                conn.whatWrk = "ep"
+                conn.whichBlg = self.dbname
 
     def blogMgmt(self):
         self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session, "Databases/Posts_"+(
@@ -161,17 +165,19 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
         existing_posts = self.sessionP.query(Post).all()
         self.PostList.clear()
         self.posts = []
-        SocketSystem.postList = []
         fg = FeedGenerator()
         fg.link(href="http://"+SocketSystem.get_ip_address()+":8080",rel="alternate")
         fg.title(self.title)
         fg.description("A DanialCMS blog!")
         fg.language('en')
         for post in existing_posts:
-            if self.loggedInUser.Username in post.WhoCanRead.split(" "):
+            if post.isPrivate:
+                if self.loggedInUser.Username in post.WhoCanRead.split(" "):
+                    self.posts.append(post)
+                    self.PostList.addItem(post.Title)
+            else:
                 self.posts.append(post)
                 self.PostList.addItem(post.Title)
-            SocketSystem.postList.append(post)
             fe = fg.add_entry()
             fe.id(post.Message)
             fe.title(post.Title)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Resources/BlogViewer.ui'
+# Form implementation generated from reading ui file 'Resources/BlogPicker.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -18,60 +18,70 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
-        self.verticalLayout_2.setContentsMargins(25, -1, 25, -1)
+        self.verticalLayout_2.setContentsMargins(25, 25, 25, 25)
+        self.verticalLayout_2.setSpacing(25)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        self.verticalLayout_2.addItem(spacerItem)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.BlogTitle = QtWidgets.QLabel(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        self.Title = QtWidgets.QLabel(self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.BlogTitle.sizePolicy().hasHeightForWidth())
-        self.BlogTitle.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.Title.sizePolicy().hasHeightForWidth())
+        self.Title.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
-        font.setPointSize(21)
-        self.BlogTitle.setFont(font)
-        self.BlogTitle.setStyleSheet("background: url(:/bg/background.png);\n"
-"border-radius: 10px;\n"
+        font.setPointSize(43)
+        self.Title.setFont(font)
+        self.Title.setStyleSheet("background: url(:/bg/background.png);\n"
+"border-radius: 20px;\n"
 "padding: 5px 10px;")
-        self.BlogTitle.setObjectName("BlogTitle")
-        self.horizontalLayout_3.addWidget(self.BlogTitle)
+        self.Title.setAlignment(QtCore.Qt.AlignCenter)
+        self.Title.setObjectName("Title")
+        self.horizontalLayout_3.addWidget(self.Title)
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 28, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        self.verticalLayout_2.addItem(spacerItem1)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setSpacing(19)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.ViewPost = QtWidgets.QPushButton(self.centralwidget)
+        self.ViewBlog = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ViewPost.sizePolicy().hasHeightForWidth())
-        self.ViewPost.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.ViewBlog.sizePolicy().hasHeightForWidth())
+        self.ViewBlog.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(15)
-        self.ViewPost.setFont(font)
-        self.ViewPost.setStyleSheet("background-color: rgb(215, 0, 230);\n"
+        self.ViewBlog.setFont(font)
+        self.ViewBlog.setStyleSheet("background-color: rgb(215, 0, 230);\n"
 "border-radius: 10px;\n"
 "padding: 0px 10px;")
-        self.ViewPost.setObjectName("ViewPost")
-        self.verticalLayout.addWidget(self.ViewPost)
-        self.horizontalLayout.addLayout(self.verticalLayout)
-        self.PostList = QtWidgets.QListWidget(self.centralwidget)
+        self.ViewBlog.setObjectName("ViewBlog")
+        self.verticalLayout.addWidget(self.ViewBlog)
+        self.Subscribe = QtWidgets.QPushButton(self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.Subscribe.sizePolicy().hasHeightForWidth())
+        self.Subscribe.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(15)
-        self.PostList.setFont(font)
-        self.PostList.setStyleSheet("background-color: #444;\n"
+        self.Subscribe.setFont(font)
+        self.Subscribe.setStyleSheet("border-radius: 10px;\n"
+"padding: 0px 5px;\n"
+"background-color: rgb(5, 87, 163);")
+        self.Subscribe.setObjectName("Subscribe")
+        self.verticalLayout.addWidget(self.Subscribe)
+        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.BlogList = QtWidgets.QListWidget(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.BlogList.setFont(font)
+        self.BlogList.setStyleSheet("background-color: #444;\n"
 "border-radius:10px;")
-        self.PostList.setObjectName("PostList")
-        self.horizontalLayout.addWidget(self.PostList)
+        self.BlogList.setObjectName("BlogList")
+        self.horizontalLayout.addWidget(self.BlogList)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
-        spacerItem2 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
-        self.verticalLayout_2.addItem(spacerItem2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 30))
@@ -87,6 +97,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.BlogTitle.setText(_translate("MainWindow", "Salaam"))
-        self.ViewPost.setText(_translate("MainWindow", "View Post"))
+        self.Title.setText(_translate("MainWindow", "Welcome to DanialCMS"))
+        self.ViewBlog.setText(_translate("MainWindow", "View Blog"))
+        self.Subscribe.setText(_translate("MainWindow", "Subscribe"))
 from . import bg_rc

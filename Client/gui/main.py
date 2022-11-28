@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import *
 from PyQt5.QtMultimediaWidgets import *
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 import socket
 import select
@@ -17,10 +17,12 @@ Base = declarative_base()
 
 class Post(Base):
     __tablename__ = 'PostDB'
+    BlogUserDB = Column(String(), nullable=False)
     Title = Column(String(), primary_key=True, nullable=False)
     Message = Column(String(), nullable=False)
     Writer = Column(String(), nullable=False)
     ReadBy = Column(String(), nullable=True)
+    isPrivate = Column(Boolean(), nullable=False)
     WhoCanRead = Column(String(), nullable=True)
 
 class User():

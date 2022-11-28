@@ -11,8 +11,11 @@ class EditCreate(QMainWindow, ui_EditCreatePost.Ui_MainWindow):
         self.EditCreatePostTitle.setText(TitlePre)
         self.EditCreateWhoCanRead.setText(WhoCanRead)
         self.EditCreatePostMessage.setText(PostMessagePre)
+        self.isPrivate.stateChanged.connect(lambda: self.changeState())
         self.show()
         self.status=False
+    def changeState(self):
+        self.EditCreateWhoCanRead.setEnabled(self.isPrivate.isChecked())
     def save(self):
         self.status=True
         self.close()

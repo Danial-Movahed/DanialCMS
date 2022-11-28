@@ -104,9 +104,10 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
             self.dlg = ErrorDialog("Please select a blog!", self)
             self.dlg.exec()
             return
-        self.loginWnd = BlogLogin(self.ListBlogs.selectedItems()[
-                                  0].text().split(",")[1].strip(), self.ListBlogs.selectedItems()[
-                                  0].text().split(",")[0].strip(),True)
+        existing_Blogs = session.query(Blogs).all()
+        for blog in existing_Blogs:
+            if blog.Title+", "+blog.UserDB == self.ListBlogs.selectedItems()[0].text():
+                self.loginWnd = BlogLogin(blog,True)
 
 if __name__ == '__main__':
     app = QApplication([])

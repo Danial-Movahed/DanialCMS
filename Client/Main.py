@@ -1,5 +1,5 @@
 from os import stat
-from gui import ui_IpSelector, ui_BlogViewer, Login
+from gui import ui_IpSelector, ui_BlogPicker, Login, BlogViewer
 from gui.main import *
 
 blogList = []
@@ -25,17 +25,36 @@ class client_thread(threading.Thread):
                             status = ""
                             continue
                         status = data
-                        if status == "FS" or status == "NB":
+                        if status == "FS" or status == "NB" or status == "FSP" or status == "NP":
                             continue
                         elif status == "DB":
                             blogList = []
                             continue
+                        elif status.split(" ")[0] == "DP" or status.split(" ")[0] == "EP":
+                            for b in blogList:
+                                if b.UserDB == status.split(" ")[1]:
+                                    if b.WndHndl != None:
+                                        b.WndHndl.postList=[]
                 except:
-                    blogList.append(pickle.loads(data))
-                    self.blgPkrHndl.refreshBlogs()
+                    tmp = pickle.loads(data)
+                    print(type(tmp))
+                    if type(tmp)==Blogs:
+                        blogList.append(tmp)
+                        self.blgPkrHndl.refreshBlogs()
+                    else:
+                        for b in blogList:
+                            if tmp.BlogUserDB == b.UserDB:
+                                if status == "NP":
+                                    if b.WndHndl != None:
+                                        b.WndHndl.postList.append(tmp)
+                                        b.WndHndl.refreshPosts()
+                                    self.blgPkrHndl.checkNotif(tmp,b)
+                                elif b.WndHndl != None:
+                                    b.WndHndl.postList.append(tmp)
+                                    b.WndHndl.refreshPosts()
 
 
-class ShowBlogPicker(QMainWindow, ui_BlogViewer.Ui_MainWindow):
+class ShowBlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
     def __init__(self, socket):
         super().__init__()
         self.setupUi(self)
@@ -66,9 +85,18 @@ class ShowBlogPicker(QMainWindow, ui_BlogViewer.Ui_MainWindow):
         self.loginBlgWnd.closeEvent = self.OpenBlog
 
     def OpenBlog(self,e):
+        global blogList, ifLoggingIn
         ifLoggingIn=False
         if self.loginBlgWnd.status:
+            for b in blogList:
+                if b == self.loginBlgWnd.blog:
+                    b.WndHndl = BlogViewer.ShowBlogViewer(b,self.socket,self.loginBlgWnd.LoginUsername.text())
+                    b.WndHndl.closeEvent = lambda event: self.CloseBlog(b)
+                    break
             print("masalan post gereft!")
+
+    def CloseBlog(self,blog):
+        blog.WndHndl = None
 
     def SubToBlog(self):
         if len(self.BlogList.selectedItems()) < 1:
@@ -80,11 +108,21 @@ class ShowBlogPicker(QMainWindow, ui_BlogViewer.Ui_MainWindow):
         blog.isSub = not blog.isSub
         self.refreshBlogs()
 
-    def findBlogByTitle(self, title):
+    def checkNotif(self,p,b):
+        blog = self.findBlogByTitle(b.UserDB,False)
+        if blog.isSub:
+            if platform.system() == "Linux":
+                subprocess.Popen(["notify-send",b.Title,p.Title])
+
+    def findBlogByTitle(self, title, mode=True):
         global blogList
         for blog in blogList:
-            if blog.Title+", "+blog.UserDB+", "+str(blog.isSub) == title:
-                return blog
+            if mode:
+                if blog.Title+", "+blog.UserDB+", "+str(blog.isSub) == title:
+                    return blog
+            else:
+                if blog.UserDB == title:
+                    return blog
         return None
 
 

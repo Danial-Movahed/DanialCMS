@@ -41,7 +41,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Enter the username and password (You can use public):</string>
+         <string>Enter the username and password:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

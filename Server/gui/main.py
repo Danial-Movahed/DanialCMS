@@ -41,10 +41,12 @@ class CDialog(QDialog):
 
 class Post(Base):
     __tablename__ = 'PostDB'
+    BlogUserDB = Column(String(), nullable=False)
     Title = Column(String(), primary_key=True, nullable=False)
     Message = Column(String(), nullable=False)
     Writer = Column(String(), nullable=False)
     ReadBy = Column(String(), nullable=True)
+    isPrivate = Column(Boolean(), nullable=False)
     WhoCanRead = Column(String(), nullable=True)
 
 
@@ -59,6 +61,7 @@ class Blogs(Base):
     __tablename__ = 'Blogs'
     Title = Column(String(1000), nullable=False)
     UserDB = Column(String(1000), primary_key=True, nullable=False)
+    WndHndl = None
 
 class BlogLoginObj():
     Title = None

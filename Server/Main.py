@@ -75,6 +75,7 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
         self.Refreshbtn.clicked.connect(lambda: self.refresh())
         self.actionQuit.triggered.connect(lambda: self.close())
         self.LoadBlogbtn.clicked.connect(lambda: self.loadblog())
+        self.BlogPickerClientIpAddress.setText(SocketSystem.get_ip_address())
         self.refresh()
         self.setWindowTitle("DanialCMS")
         self.serverThread = threading.Thread(

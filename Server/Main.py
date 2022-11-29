@@ -79,7 +79,7 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
         self.refresh()
         self.setWindowTitle("DanialCMS")
         self.serverThread = threading.Thread(
-            target=SocketSystem.runServer, args=())
+            target=SocketSystem.runServer, args=(self,))
         self.serverThread.daemon = True
         self.serverThread.start()
         self.show()
@@ -109,7 +109,7 @@ class BlogPicker(QMainWindow, ui_BlogPicker.Ui_MainWindow):
         existing_Blogs = session.query(Blogs).all()
         for blog in existing_Blogs:
             if blog.Title+", "+blog.UserDB == self.ListBlogs.selectedItems()[0].text():
-                self.loginWnd = BlogLogin(blog,True)
+                self.loginWnd = BlogLogin(blog,self,True)
 
 if __name__ == '__main__':
     app = QApplication([])

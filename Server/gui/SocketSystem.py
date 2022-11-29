@@ -24,10 +24,11 @@ def get_ip_address():
 
 
 class client_thread(threading.Thread):
-    def __init__(self, clientsocket, id):
+    def __init__(self, clientsocket, id, blogPkrWnd):
         threading.Thread.__init__(self)
         self.clientsocket = clientsocket
         self.clientsocket.setblocking(0)
+        self.blogPkrWnd = blogPkrWnd
         self.id = id
         self.connected = True
         self.whatWrk = "f"
@@ -96,6 +97,18 @@ class client_thread(threading.Thread):
                             sleep(0.5)
                     self.whatWrk = ""
                     self.whichBlg = ""
+                elif self.whatWrk == "db":
+                    self.clientsocket.send("DB".encode())
+                    sleep(0.5)
+                    for b in blogList:
+                        tosend = Blogs()
+                        tosend.Title = b.Title
+                        tosend.UserDB = b.UserDB
+                        self.clientsocket.send(pickle.dumps(tosend))
+                        sleep(0.5)
+                    self.clientsocket.send("Done".encode())
+                    sleep(0.5)
+                    self.whatWrk = ""
 
 
                 ready = select.select([self.clientsocket], [], [], 1)
@@ -155,7 +168,7 @@ class client_thread(threading.Thread):
                 print(conn)
 
 
-def runServer():
+def runServer(blogPkrWnd):
     global id, conn, userList
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     serversocket.bind(("", 4524))
@@ -163,7 +176,7 @@ def runServer():
     while True:
         (clientsocket, address) = serversocket.accept()
         print("accepted!")
-        conn.append(client_thread(clientsocket, id))
+        conn.append(client_thread(clientsocket, id, blogPkrWnd))
         conn[id].start()
         id += 1
 

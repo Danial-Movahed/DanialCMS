@@ -15,6 +15,7 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
         self.loggedInUser = loggedInUser
         self.BlogMgmtClientAddr.setText(SocketSystem.get_ip_address())
         self.BlogMgmtRssAddr.setText("http://"+SocketSystem.get_ip_address()+":8080")
+        self.status = False
         if loggedInUser.isAdmin:
             self.refreshUsers()
             self.BlogMgmtDeleteUser.clicked.connect(lambda: self.deleteUser())
@@ -108,4 +109,6 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
             session.delete(session.query(Blogs).filter(
                 Blogs.UserDB == self.usersDBName).first())
             session.commit()
-            quit()
+            session.close()
+            self.status = True
+            self.close()

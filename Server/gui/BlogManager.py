@@ -155,6 +155,13 @@ class Blog(QMainWindow, ui_BlogManager.Ui_MainWindow):
     def blogMgmt(self):
         self.blogMgmtWnd = BlogMgmt.BlogMgmt(self.session, "Databases/Posts_"+(
             self.dbname.split("/")[1].split("_")[1]), self.dbname, self.loggedInUser)
+        self.blogMgmtWnd.closeEvent = self.blogMgmtSave
+
+    def blogMgmtSave(self,e):
+        if self.blogMgmtWnd.status:
+            for conn in SocketSystem.conn:
+                conn.whatWrk = "db"
+            self.close()
 
     def refreshPosts(self):
         existing_posts = self.sessionP.query(Post).all()

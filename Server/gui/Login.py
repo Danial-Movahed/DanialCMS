@@ -1,21 +1,23 @@
 from .main import *
 from . import ui_Login,BlogManager
 
-def fixWndHndl(blog):
+def fixWndHndl(blog,blgPkr):
     blog.WndHndl.session.close()
     blog.WndHndl.sessionP.close()
     blog.WndHndl = None
+    blgPkr.refresh()
 
-def LoggedIn(u, blog):
+def LoggedIn(u, blog, blgPkr):
     blog.WndHndl = BlogManager.Blog(u,blog.Title, blog.UserDB)
-    blog.WndHndl.closeEvent = lambda event: fixWndHndl(blog)
+    blog.WndHndl.closeEvent = lambda event: fixWndHndl(blog,blgPkr)
 class BlogLogin(QMainWindow, ui_Login.Ui_MainWindow):
-    def __init__(self, blog, runFTSetup=True,username=None,password=None):
+    def __init__(self, blog, blgPkr=None, runFTSetup=True,username=None,password=None):
         super().__init__()
         self.setupUi(self)
         self.dbname = blog.UserDB
         self.title = blog.Title
         self.blog = blog
+        self.blgPkr = blgPkr
         self.engine = create_engine('sqlite:///'+self.dbname)
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
@@ -37,7 +39,7 @@ class BlogLogin(QMainWindow, ui_Login.Ui_MainWindow):
             if not onlyCheck:
                 if self.LoginUsername.text() == user.Username and blake2s(self.LoginPassword.text().encode()).hexdigest() == user.Password:
                     self.label_6.setText("Welcome!")
-                    LoggedIn(user, self.blog)
+                    LoggedIn(user, self.blog, self.blgPkr)
                     self.close()
                     self.session.close()
                     return

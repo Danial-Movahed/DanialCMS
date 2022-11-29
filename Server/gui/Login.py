@@ -29,6 +29,7 @@ class BlogLogin(QMainWindow, ui_Login.Ui_MainWindow):
             self.show()
 
     def checkSecrets(self,onlyCheck = False):
+        self.session.expire_all()
         existing_Users = self.session.query(User).all()
         for user in existing_Users:
             if not onlyCheck:

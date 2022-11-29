@@ -14,7 +14,8 @@ class BlogMgmt(QMainWindow, ui_BlogMgmt.Ui_MainWindow):
         self.usersDBName = usersDBName
         self.loggedInUser = loggedInUser
         self.BlogMgmtClientAddr.setText(SocketSystem.get_ip_address())
-        self.BlogMgmtRssAddr.setText("http://"+SocketSystem.get_ip_address()+":8080")
+        # self.BlogMgmtRssAddr.setText("http://"+SocketSystem.get_ip_address()+":8080")
+        self.BlogMgmtRssAddr.setText("Not implemented!")
         self.status = False
         if loggedInUser.isAdmin:
             self.refreshUsers()

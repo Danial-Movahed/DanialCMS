@@ -36,7 +36,7 @@ class client_thread(threading.Thread):
     def run(self):
         global blogList
         while self.connected:
-            # try:
+            try:
                 if self.whatWrk == "f":
                     self.clientsocket.send("FS".encode())
                     sleep(0.5)
@@ -111,12 +111,10 @@ class client_thread(threading.Thread):
                         tmp = sessionPost.query(Post).filter(Post.Title == data[2]).first()
                         print(tmp.Title)
                         if tmp.ReadBy == None:
-                            print("hmmmm")
                             tmp.ReadBy=data[3]
                         elif data[3] not in tmp.ReadBy.split(" "):
                             tmp.ReadBy+=" "+data[3]
                         sessionPost.commit()
-                        # Who read ????
                     except:
                         tmp=pickle.loads(data)
                         tmp2=Blogs()
@@ -149,12 +147,12 @@ class client_thread(threading.Thread):
 
                 self.clientsocket.send("keep-alive".encode())
                 sleep(0.5)
-            # except:
-            #     self.connected = False
-            #     global id, conn
-            #     id -= 1
-            #     conn.remove(self)
-            #     print(conn)
+            except:
+                self.connected = False
+                global id, conn
+                id -= 1
+                conn.remove(self)
+                print(conn)
 
 
 def runServer():

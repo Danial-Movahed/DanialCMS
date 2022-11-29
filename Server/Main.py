@@ -116,3 +116,4 @@ if __name__ == '__main__':
     app.setApplicationName("DanialCMS")
     wnd = BlogPicker()
     app.exec()
+    session.close()

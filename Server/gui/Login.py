@@ -2,6 +2,8 @@ from .main import *
 from . import ui_Login,BlogManager
 
 def fixWndHndl(blog):
+    blog.WndHndl.session.close()
+    blog.WndHndl.sessionP.close()
     blog.WndHndl = None
 
 def LoggedIn(u, blog):
